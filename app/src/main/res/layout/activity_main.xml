@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_vertical"
+    android:background="#d3d3d3"
+    tools:context=".MainActivity" >
+
+    <LinearLayout
+        android:id="@+id/above"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="13dp"
+        android:orientation="horizontal"
+        android:background="@drawable/border"
+        android:layout_gravity="center_vertical">
+
+
+        <LinearLayout
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:gravity="start"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/time_hundred"
+                android:layout_width="25dp"
+                android:layout_height="50dp"
+                app:srcCompat="@drawable/d10" />
+
+            <ImageView
+                android:id="@+id/time_ten"
+                android:layout_width="25dp"
+                android:layout_height="50dp"
+                app:srcCompat="@drawable/d10" />
+
+            <ImageView
+                android:id="@+id/time_one"
+                android:layout_width="25dp"
+                android:layout_height="50dp"
+                app:srcCompat="@drawable/d10" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/face"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/face_img"
+                android:adjustViewBounds="true"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/face0" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:padding="5dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/num_hundred"
+                android:layout_width="25dp"
+                android:layout_height="50dp"
+                app:srcCompat="@drawable/d10" />
+
+            <ImageView
+                android:id="@+id/num_ten"
+                android:layout_width="25dp"
+                android:layout_height="50dp"
+                app:srcCompat="@drawable/d10" />
+
+            <ImageView
+                android:id="@+id/num_one"
+                android:layout_width="25dp"
+                android:layout_height="50dp"
+                app:srcCompat="@drawable/d10" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/oriLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:padding="2dp"
+        android:orientation="vertical"
+        android:background="@drawable/border">
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="10dp"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/show_blank"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border"
+            android:layout_margin="10dp"
+            android:text="白块全出"
+            />
+
+        <Button
+            android:id="@+id/tips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border"
+            android:layout_margin="10dp"
+            android:text="获取提示" />
+
+
+    </LinearLayout>
+
+</LinearLayout>
