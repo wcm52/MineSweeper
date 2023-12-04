@@ -28,7 +28,7 @@ import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
 
-    private int width = 17;//宽度
+    private int width = 13;//宽度
     private int height = 10; //高度
     private LinearLayout layout_item; //每一行的布局
     private ImageView img; //创建的每一块的图片
