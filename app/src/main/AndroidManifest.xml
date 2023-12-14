@@ -13,6 +13,12 @@
         android:theme="@style/Theme.MineSweeper"
         tools:targetApi="31">
         <activity
+            android:name=".dialog"
+            android:exported="false" />
+        <activity
+            android:name=".home"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

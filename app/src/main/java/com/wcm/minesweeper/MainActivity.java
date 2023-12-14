@@ -26,9 +26,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements CustomDialog.DialogClickListener{
 
-    private int width = 13;//宽度
+    private int width = 12;//宽度
     private int height = 10; //高度
     private LinearLayout layout_item; //每一行的布局
     private ImageView img; //创建的每一块的图片
@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean isTimerRunning = false; //是否开始计时
     private boolean isEnd = false;
     private long startTime;//开始计时事件
+    private long pauseTime = 0;//暂停前的已经过的时间
     private Timer timerTips; //显示提示
     private Timer timer;//定时器
     private Timer timerJoker;
@@ -89,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 getTips();
+                // 获得提示后隔1秒隐藏提示
                 timerTips = new Timer();
                 TimerTask task = new TimerTask() {
                     @Override
@@ -270,7 +272,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //初始化最开始的时间和地雷数量
+    //初始化最开始的时间和地雷数量和笑脸
     public void initAboveNum(){
         //初始化地雷数量显示
         int one = 0;
@@ -298,10 +300,41 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 timer.cancel(); //停止计时器
-                recreate();
+                pauseTime += SystemClock.elapsedRealtime() - startTime;
+                showCustomDialog();
+
+//                recreate();
             }
         });
     }
+    //点击暂停
+    public void showCustomDialog(){
+        CustomDialog dialog = new CustomDialog(this, this);
+        dialog.show();
+        // 设置点击外部空白处不取消对话框
+        dialog.setCanceledOnTouchOutside(false);
+    }
+    @Override
+    public void onContinueClicked() {
+        // 继续游戏的逻辑
+        startPauseTimer();
+        Toast.makeText(this, "继续游戏", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRestartClicked() {
+        // 重新开始游戏的逻辑
+        Toast.makeText(this, "再来一局", Toast.LENGTH_SHORT).show();
+        timer.cancel();
+        recreate();
+    }
+
+    @Override
+    public void onExitClicked() {
+        // 退出游戏的逻辑
+        finish();
+    }
+
     //统计周围有几颗地雷
     public int mineNum(int a,int b){
         int num = 0;
@@ -502,7 +535,20 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         startTime = SystemClock.elapsedRealtime(); //获取系统启动的时间（毫秒为单位）
-        timer.scheduleAtFixedRate(task, 1000, 1000); //每隔1000ms更新一下
+        timer.scheduleAtFixedRate(task, 1000, 1000); //每隔1000ms更新一下，以1000ms的速率重复进行
+    }
+    //暂停后继续计时
+    public void startPauseTimer(){
+        timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                updateTimerImg(SystemClock.elapsedRealtime() - startTime + pauseTime);
+                Log.d("Time", String.valueOf(SystemClock.elapsedRealtime() - startTime));
+            }
+        };
+        startTime = SystemClock.elapsedRealtime();
+        timer.scheduleAtFixedRate(task, 1000, 1000); //每隔1s更新一下
     }
     //更新时间图片
     public void updateTimerImg(long timeSeconds){
@@ -510,6 +556,10 @@ public class MainActivity extends AppCompatActivity {
         int ten = 0;
         int hundred = 0;
         int seconds = (int) (timeSeconds / 1000);
+        //时间超出 999s 后就不再更新图片
+//        if(seconds >= 999){
+//            return;
+//        }
         one = seconds % 10;
         ten = (seconds % 100) / 10;
         hundred = (seconds % 1000) / 100;
