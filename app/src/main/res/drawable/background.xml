@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/drawable/background.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 添加背景颜色 -->
+    <!-- 添加背景颜色 -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#f2f2f2" />
+        </shape>
+    </item>
+
+    <!-- 添加背景图片 -->
+    <item>
+        <bitmap
+            android:src="@drawable/minehome2"
+            android:gravity="center" />
+    </item>
+
+</layer-list>

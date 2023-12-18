@@ -40,13 +40,6 @@ public class Mine {
     public boolean getClicked(){
         return isClick;
     }
-    //由于中间是白板，点击的四周
-    public void setClicked2(){
-        isClick2 = true;
-    }
-    public boolean getClicked2(){
-        return isClick2;
-    }
     //设置旗帜
     public void setFlag(boolean b){
         flag = b;

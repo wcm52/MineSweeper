@@ -3,6 +3,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="300dp"
     android:layout_height="300dp"
+    android:background="@drawable/background"
     android:orientation="vertical"
     android:padding="16dp">
 
@@ -22,25 +23,33 @@
         android:text="选择操作"
         android:layout_marginTop="8dp"
         android:gravity="center"/>
-
-    <Button
-        android:id="@+id/btnContinue"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:text="继续"
-        android:layout_marginTop="16dp"/>
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:elevation="3dp"
+        android:padding="20dp">
+        <Button
+            android:id="@+id/btnContinue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="继续"
+            android:layout_marginTop="16dp"/>
 
-    <Button
-        android:id="@+id/btnRestart"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="再来一局"
-        android:layout_marginTop="8dp"/>
+        <Button
+            android:id="@+id/btnRestart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="再来一局"
+            android:layout_marginTop="8dp"/>
 
-    <Button
-        android:id="@+id/btnExit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="退出"
-        android:layout_marginTop="8dp"/>
+        <Button
+            android:id="@+id/btnExit"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="返回主菜单"
+            android:layout_marginTop="8dp"/>
+    </LinearLayout>
+
 </LinearLayout>

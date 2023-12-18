@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -13,13 +14,16 @@
         android:theme="@style/Theme.MineSweeper"
         tools:targetApi="31">
         <activity
-            android:name=".dialog"
+            android:name=".GameFinish"
             android:exported="false" />
         <activity
-            android:name=".home"
+            android:name=".CustomDialog"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Home"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
