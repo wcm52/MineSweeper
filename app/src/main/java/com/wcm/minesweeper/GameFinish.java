@@ -44,6 +44,9 @@ public class GameFinish extends AppCompatActivity {
         if(remainCnt < 0){
             remainCnt = 0;
         }
+        if(status){
+            remainCnt = 0;
+        }
         //设置扫雷数量
         TextView tvMinesCnt = findViewById(R.id.tvGameCnt);
         tvMinesCnt.setText("剩余数量：" + remainCnt + "/" + mineCnt);

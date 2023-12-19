@@ -1,5 +1,6 @@
 package com.wcm.minesweeper;
 
+import androidx.annotation.LongDef;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,6 +20,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -39,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Dial
     private ImageView img_item;//监听事件里的图片（点击的）
     private Mine[][] mines= new Mine[width][height];//创建一个Mine类，用于确定当前位置是否有地雷以及设置地雷
     private int ID = 0;
-    private int mineCnt = 50;//设置地雷数量
+    private int mineCnt = 35;//设置地雷数量
     private boolean firstClicked = true;
     private boolean isTimerRunning = false; //是否开始计时
     private int flagCnt = 0;
@@ -68,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Dial
         initButtonTips();//初始化提示按钮（点击显示提示）
         initShowBlanks();//初始化白块全出按钮（点击后显示全部白块）
 //        showMines();
+//        animateFireworks(this.getCurrentFocus());
     }
 
     @Override
@@ -116,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Dial
         builder.show();
     }
     //延迟跳转到结束页面
-    public void delayJumpToFinish(){
+    public void delayJumpToFinish(int t){
         Timer time = new Timer();
         TimerTask task = new TimerTask() {
             @Override
@@ -125,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Dial
                 cancelTimer(time);
             }
         };
-        time.schedule(task, 1050);
+        time.schedule(task, t);
     }
     // 取消定时任务
     public void cancelTimer(Timer timer) {
@@ -191,41 +194,52 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Dial
             }
         });
 
-//        Button button_tipsRandom = findViewById(R.id.tips_random);
-//        button_tipsRandom.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                tipsRandom();
-//            }
-//        });
+        Button button_tipsRandom = findViewById(R.id.tips_random);
+        button_tipsRandom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                tipsRandom();
+            }
+        });
     }
 
-//    public void tipsRandom(){
+    public void tipsRandom(){
 //        if(tipCnt >= 3){
 //            return;
 //        }
-//        Random random = new Random();
-//        int x,y;
-//        tipCnt++;
-//        while (true){
-//            x = random.nextInt(width);
-//            y = random.nextInt(height);
-//            //如果随机的这个位置没有被点击过，也没有插上旗，也不是地雷
-//            if(!mines[x][y].getClicked() && !mines[x][y].getFlag() && !mines[x][y].getMine()){
-//                mines[x][y].setClicked();
-//                ImageView img = findViewById(mines[x][y].getID());
-//                int n = mineNum(x,y);//该位置周围的地雷数量
-//                if(n == 0){ //周围一个地雷都没有
-//                    blankMine(x,y);
-//                }
-//                else { //周围有地雷
-//                    mineNumImg(n,img);
-//                }
-//                break;
-//            }
-//        }
-//    }
+        Random random = new Random();
+        int x,y;
+        tipCnt++;
+        while (true){
+            x = random.nextInt(width);
+            y = random.nextInt(height);
+            //如果随机的这个位置没有被点击过，也没有插上旗，也不是地雷
+            if(!mines[x][y].getClicked() && !mines[x][y].getFlag() && !mines[x][y].getMine()){
+                mines[x][y].setClicked();
+                ImageView img = findViewById(mines[x][y].getID());
+                int n = mineNum(x,y);//该位置周围的地雷数量
+                if(n == 0){ //周围一个地雷都没有
+                    blankMine(x,y);
+                }
+                else { //周围有地雷
+                    mineNumImg(n,img);
+                }
+                Log.d("tips", x + " " + y);
+                break;
+            }
+            if(isWin()){
+                faceImg = 3;
+                animateFireworks(this.getCurrentFocus());
+//                delayJumpToFinish();
+                //如果结束了，则停止计时
+                timer.cancel();
+                setFaceImg();
+            }
+
+        }
+    }
     public void initLayout(){
+
         //设置布局属性
         ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(100, 100);
         LinearLayout layout = (LinearLayout) findViewById(R.id.oriLayout);//获取最开始的整体布局
@@ -276,6 +290,7 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Dial
                 img.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+//                        animateFireworks(view);
                         gameDuration = SystemClock.elapsedRealtime() - startTime + pauseTime;
                         img_item = (ImageView) view;
                         int tmp = img_item.getId();
@@ -308,7 +323,7 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Dial
                                 vibrator.vibrate(100);
                             }
 
-                            delayJumpToFinish();
+                            delayJumpToFinish(1050);
 //                            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 //                            builder.setIcon(R.drawable.icon);
 //                            builder.setTitle(("你输了！"));
@@ -341,7 +356,19 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Dial
                         if(isWin()){
                             isEnd = true;
                             faceImg = 3;
-                            delayJumpToFinish();
+                            animateFireworks(view);
+                            // 设置震动
+                            Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                // 振动 100 毫秒，设置振动模式
+                                VibrationEffect vibrationEffect = VibrationEffect.createOneShot(150, VibrationEffect.DEFAULT_AMPLITUDE);
+                                vibrator.vibrate(vibrationEffect);
+                            } else {
+                                // 在旧版本上使用过时的方法
+                                vibrator.vibrate(100);
+                            }
+                            delayJumpToFinish(2000);
 //                            AlertDialog.Builder builder2 = new AlertDialog.Builder(MainActivity.this);
 //                            builder2.setIcon(R.drawable.icon);//系统自带
 //                            builder2.setTitle(("恭喜你！"));
@@ -617,8 +644,7 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Dial
                 //Toast.makeText(MainActivity.this, "你踩到了地雷！", Toast.LENGTH_SHORT).show();
                 // 也可以调用结束游戏的方法
                 // finishGame();
-
-                // 移除 LottieAnimationView
+                // 移除 fireworksAnimationView
                 ((ViewGroup) findViewById(android.R.id.content)).removeView(explosionAnimationView);
             }
 
@@ -648,10 +674,48 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Dial
         explosionAnimationView.playAnimation();
     }
 
+    //添加烟花动画
+    public void animateFireworks(View view){
+        // 创建一个 FrameLayout 作为容器
+        ViewGroup parentView = (ViewGroup) findViewById(android.R.id.content);
+        // 创建 LottieAnimationView
+        LottieAnimationView fireworksAnimationView = new LottieAnimationView(this);
+        parentView.addView(fireworksAnimationView);
+
+        // 设置动画文件
+        fireworksAnimationView.setAnimation("fireworks.json");
+        // 播放动画
+        fireworksAnimationView.playAnimation();
+        // 设置动画监听器，在动画结束时执行相应的操作
+        fireworksAnimationView.addAnimatorListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                // 动画开始时的操作
+            }
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                // 动画结束时的操作
+                // 移除 LottieAnimationView
+                ((ViewGroup) findViewById(android.R.id.content)).removeView(fireworksAnimationView);
+//                navigateToGameFinish();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                // 动画取消时的操作
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+                // 动画重复时的操作
+            }
+        });
+    }
+
     //判断是否胜利
     public boolean isWin(){
         int notClicked = 0;
-        boolean isWin = false;
+//        boolean isWin = false;
         for(int i = 0; i < width; i++){
             for(int j = 0; j < height; j++){
 //                if(mines[i][j].getClicked() || mines[i][j].getClicked2()){
@@ -673,6 +737,7 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Dial
 //        if(width * height - isClicked == mineCnt){
 //            return true;
 //        }
+
         return true;
     }
 
