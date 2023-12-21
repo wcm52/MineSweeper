@@ -14,9 +14,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="13dp"
-        android:orientation="horizontal"
         android:background="@drawable/border"
-        android:layout_gravity="center_vertical">
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal">
 
 
         <LinearLayout
@@ -105,17 +105,18 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/tips_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center_horizontal"
-        android:layout_margin="10dp"
+        android:layout_margin="5dp"
         android:gravity="center">
 
         <Button
             android:id="@+id/show_blank"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
             android:background="@drawable/border"
             android:layout_margin="10dp"
             android:text="白块全出"
@@ -123,20 +124,19 @@
 
         <Button
             android:id="@+id/tips_random"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
             android:background="@drawable/border"
             android:layout_margin="10dp"
             android:text="随机一个" />
 
         <Button
             android:id="@+id/tips"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
             android:background="@drawable/border"
             android:layout_margin="10dp"
             android:text="获取提示" />
-
 
     </LinearLayout>
 </LinearLayout>

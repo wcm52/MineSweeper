@@ -14,6 +14,8 @@ public class GameFinish extends AppCompatActivity {
     private int mineCnt = 0; //传过来的总的地雷数量
     private int flagCnt = 0; //传过来的插旗数量
     private boolean status = false; //传过来的游戏是否胜利状态
+    private int width;
+    private int height;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +25,7 @@ public class GameFinish extends AppCompatActivity {
         // 获取从游戏界面传递过来的游戏时长
         Intent intent = getIntent();
         status = intent.getBooleanExtra("game_status",false);
-        Log.d("Status", status + " ");
+//        Log.d("Status", status + " ");
         //设置游戏状态
         TextView tvGameStatus = findViewById(R.id.status_text);
         if(status){
@@ -40,6 +42,8 @@ public class GameFinish extends AppCompatActivity {
 
         mineCnt = intent.getIntExtra("mines_cnt",0);
         flagCnt = intent.getIntExtra("flag_cnt",0);
+        width = intent.getIntExtra("width",0);
+        height = intent.getIntExtra("height",0);
         int remainCnt = mineCnt - flagCnt;
         if(remainCnt < 0){
             remainCnt = 0;
@@ -83,6 +87,10 @@ public class GameFinish extends AppCompatActivity {
     private void startGameAgain() {
         Intent intent = new Intent(GameFinish.this,MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION); //不显示切换动画
+        // 启动游戏界面并传递雷的数量
+        intent.putExtra("minesCount", mineCnt);
+        intent.putExtra("minesWidth", width);
+        intent.putExtra("minesHeight", height);
         startActivity(intent);
         // 关闭当前界面，返回到游戏界面
         finish();
@@ -90,11 +98,9 @@ public class GameFinish extends AppCompatActivity {
 
     private void returnToMainMenu() {
         // 处理返回主菜单的逻辑，例如跳转到主菜单界面
-        Intent intent = new Intent(this, Home.class);
+        Intent intent = new Intent(this, Model.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION); //不显示切换动画
         startActivity(intent);
-
-        // 关闭当前界面
         finish();
     }
 }

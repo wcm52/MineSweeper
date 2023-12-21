@@ -19,6 +19,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -34,14 +35,14 @@ import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements CustomDialog.DialogClickListener{
 
-    private int width = 17;//宽度
-    private int height = 10; //高度
+    private int width = 20;//高度
+    private int height = 10; //宽度
+    private int mineCnt = 10;//设置地雷数量
     private LinearLayout layout_item; //每一行的布局
     private ImageView img; //创建的每一块的图片
     private ImageView img_item;//监听事件里的图片（点击的）
-    private Mine[][] mines= new Mine[width][height];//创建一个Mine类，用于确定当前位置是否有地雷以及设置地雷
+    private Mine[][] mines= new Mine[1000][1000];//创建一个Mine类，用于确定当前位置是否有地雷以及设置地雷
     private int ID = 0;
-    private int mineCnt = 35;//设置地雷数量
     private boolean firstClicked = true;
     private boolean isTimerRunning = false; //是否开始计时
     private int flagCnt = 0;
@@ -54,13 +55,21 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Dial
     private int faceImg = 0; //设置face的图片，初始是0
     private long gameDuration = 0; //设置游戏持续时间
     private CountDownTimer countDownTimer; //设置倒计时，用于在游戏结束后暂停一段时间后跳转到游戏结束界面
-    private int tipCnt = 0;
+    private int tipCnt = 0;//随机一次的次数
+    private int screenWidth; //得到屏幕宽度
+    private int screenHeight; //得到屏幕高度
+    private int param; //设置到布局中的地雷宽度
+
+    boolean once = false;//设置是否点击了随机一个，保证随机一个提示一次完成后才能继续（避免连续多次点击出现问题）
+    private boolean tipsOnce = false; //设置获取提示一次完成后才能继续
+    private boolean timeClicked = false;//延迟跳转结束后才能继续
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        minesInit();
         startTimer();//计时器开始计时
         initAboveNum();//初始化时间和地雷显示
         initNewMine();//定义Mine
@@ -83,15 +92,39 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Dial
     @Override
     public void onRestartClicked() {
         // 重新开始游戏的逻辑
-        Toast.makeText(this, "再来一局", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "再来一局", Toast.LENGTH_SHORT).show();
         timer.cancel();
         recreate();
+        minesInit();
     }
 
     @Override
     public void onExitClicked() {
         // 返回主菜单
         navigateToMainMenu();
+    }
+    int layoutHeight = 0;
+    //获取屏幕的宽高信息
+    public void getScreenLength(){
+        // 获取屏幕的度量信息
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
+        // 屏幕的实际像素宽度和高度
+        screenWidth = displayMetrics.widthPixels;
+        screenHeight = displayMetrics.heightPixels;
+
+
+        //设置地雷的大小属性
+        param = Math.min((screenWidth-60) / height,(int)(0.75 * screenHeight/ width));
+    }
+
+    public void minesInit(){
+        Intent intent = getIntent();
+        mineCnt = intent.getIntExtra("minesCount",10);
+        width = intent.getIntExtra("minesWidth",9);
+        height = intent.getIntExtra("minesHeight",9);
+
     }
 
     // 跳转到主菜单界面
@@ -120,15 +153,19 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Dial
     }
     //延迟跳转到结束页面
     public void delayJumpToFinish(int t){
-        Timer time = new Timer();
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                navigateToGameFinish();
-                cancelTimer(time);
-            }
-        };
-        time.schedule(task, t);
+        if(!timeClicked){
+            timeClicked = true;
+            Timer time = new Timer();
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    timeClicked = true;
+                    cancelTimer(time);
+                    navigateToGameFinish();
+                }
+            };
+            time.schedule(task, t);//延迟t秒后执行 run 中的内容
+        }
     }
     // 取消定时任务
     public void cancelTimer(Timer timer) {
@@ -146,6 +183,8 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Dial
         intent.putExtra("game_status",isWin());
         intent.putExtra("mines_cnt",mineCnt);
         intent.putExtra("flag_cnt",flagCnt);
+        intent.putExtra("width",width);
+        intent.putExtra("height",height);
         startActivity(intent);
         finish(); // 关闭当前界面
     }
@@ -173,24 +212,29 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Dial
             }
         });
     }
+
     //提示
     public void initButtonTips(){
         Button button_tips = findViewById(R.id.tips);
         button_tips.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getTips();
-                // 获得提示后隔1秒隐藏提示
-                timerTips = new Timer();
-                TimerTask task = new TimerTask() {
-                    @Override
-                    public void run() {
-                        hideTips();
-                        cancelTimer(timer);
-                    }
-                };
-                timerTips.schedule(task, 1000); //每隔1000ms更新一下
-//                timerTips.cancel();
+                if(!tipsOnce){//防止多次点击出现错误，只有一次点击执行结束后才会进行下一次点击
+                    tipsOnce = true;
+                    getTips();
+                    // 获得提示后隔1秒隐藏提示
+                    timerTips = new Timer();
+                    TimerTask task = new TimerTask() {
+                        @Override
+                        public void run() {
+                            hideTips();
+                            tipsOnce = false;
+                            cancelTimer(timerTips);
+                        }
+                    };
+                    timerTips.schedule(task, 1000); //每隔1000ms更新一下
+                }
+
             }
         });
 
@@ -202,7 +246,6 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Dial
             }
         });
     }
-
     public void tipsRandom(){
 //        if(tipCnt >= 3){
 //            return;
@@ -210,7 +253,8 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Dial
         Random random = new Random();
         int x,y;
         tipCnt++;
-        while (true){
+        while (!once){
+//            animateFireworks(this.getCurrentFocus());
             x = random.nextInt(width);
             y = random.nextInt(height);
             //如果随机的这个位置没有被点击过，也没有插上旗，也不是地雷
@@ -225,23 +269,41 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Dial
                     mineNumImg(n,img);
                 }
                 Log.d("tips", x + " " + y);
+                if(isWin()){
+                    once = true;
+                    faceImg = 3;
+                    Log.d("tipss", x + " " + y);
+                    //如果结束了，则停止计时
+                    timer.cancel();
+                    setFaceImg();
+                    animateFireworks(this.getCurrentFocus());
+                    // 设置震动
+                    Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        // 振动 100 毫秒，设置振动模式
+                        VibrationEffect vibrationEffect = VibrationEffect.createOneShot(150, VibrationEffect.DEFAULT_AMPLITUDE);
+                        vibrator.vibrate(vibrationEffect);
+                    } else {
+                        // 在旧版本上使用过时的方法
+                        vibrator.vibrate(100);
+                    }
+                    delayJumpToFinish(2000);
+                }
                 break;
-            }
-            if(isWin()){
-                faceImg = 3;
-                animateFireworks(this.getCurrentFocus());
-//                delayJumpToFinish();
-                //如果结束了，则停止计时
-                timer.cancel();
-                setFaceImg();
             }
 
         }
     }
     public void initLayout(){
-
+        // 获取屏幕密度
+        float scale = getResources().getDisplayMetrics().density;
+//        // 使用dp作为单位设置宽度和高度
+//        int widthInDp = (int) (30 * scale);
+//        int heightInDp = (int) (30 * scale);
+        getScreenLength();
         //设置布局属性
-        ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(100, 100);
+        ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(param, param);
         LinearLayout layout = (LinearLayout) findViewById(R.id.oriLayout);//获取最开始的整体布局
         for(int i = 0; i < width; i++){
             //为每一行创建一个布局
@@ -269,8 +331,8 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Dial
                         }
                         img_item = (ImageView) view;
                         int tmp = img_item.getId();
-                        int x = tmp / 10;
-                        int y = tmp % 10;
+                        int x = tmp / height;
+                        int y = tmp % height;
                         //判断是否已经点击过了，如果点击过了，则不能插旗
                         if( !mines[x][y].getClicked()){
                             if(mines[x][y].getFlag()){
@@ -294,8 +356,9 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Dial
                         gameDuration = SystemClock.elapsedRealtime() - startTime + pauseTime;
                         img_item = (ImageView) view;
                         int tmp = img_item.getId();
-                        int x = tmp / 10;
-                        int y = tmp % 10;
+                        int x = tmp / height;
+                        int y = tmp % height;
+                        Log.d("TAG", x + " " + y);
                         //如果已经结束了，则点击事件不再生效
                         if(isEnd){
                             return;
@@ -422,9 +485,20 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Dial
                 y = random.nextInt(height);
                 Log.d("cnt", String.valueOf(x) + " " + String.valueOf(y));
             }while (mines[x][y].getMine());//如果这个已经设置为地雷了，则重新找一组随机数
-            Log.d("cntMine", String.valueOf(x) + " " + String.valueOf(y));
+//            Log.d("cntMine", String.valueOf(x) + " " + String.valueOf(y));
             mines[x][y].setMine(); //将这个位置设置为地雷
         }
+//        for(int i = 0; i < width; i++){
+//            for(int j = 0; j < height; j++){
+//                if(mines[i][j].getMine()){
+//                    System.out.print(1);
+//                }
+//                else {
+//                    System.out.print(0);
+//                }
+//            }
+//            System.out.println();
+//        }
 
     }
     //设置空白的标志
@@ -628,7 +702,7 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Dial
 
         // 创建新的 LottieAnimationView 并设置动画文件
         LottieAnimationView explosionAnimationView = new LottieAnimationView(this);
-        explosionAnimationView.setLayoutParams(new ViewGroup.LayoutParams(100, 100));
+        explosionAnimationView.setLayoutParams(new ViewGroup.LayoutParams(param+10, param+10));
         explosionAnimationView.setAnimation("Animation2.json"); // 替换为你的 JSON 文件的名称
 
         // 设置动画监听器，在动画结束时执行相应的操作
@@ -663,9 +737,14 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Dial
         ViewGroup parentView = (ViewGroup) findViewById(android.R.id.content);
         parentView.addView(explosionAnimationView);
 
+        // 获取应用程序资源中的DisplayMetrics对象，用于获取与显示相关的信息
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        float screenHeightPercent = 0.035f; // 例如，设置为 3.5%
+        // 定义一个浮点数，表示屏幕高度的百分比。在此例中，设置为3.5%
+        float screenHeightPercent = 0.035f;
+        // 计算一个相对于屏幕高度的偏移量
+        // 屏幕的实际像素高度乘以百分比，以得到相对于屏幕高度的偏移值
         float screenHeightOffset = displayMetrics.heightPixels * screenHeightPercent;
+
 
 
         // 设置 LottieAnimationView 的位置
@@ -737,7 +816,6 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Dial
 //        if(width * height - isClicked == mineCnt){
 //            return true;
 //        }
-
         return true;
     }
 

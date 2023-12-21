@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:background="@drawable/border2"
-            android:text="开始游戏" />
+            android:text="模式选择" />
 
         <Button
             android:id="@+id/btnCustomize"
@@ -44,7 +44,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp"
             android:background="@drawable/border2"
-            android:text="自定义" />
+            android:text="玩法说明" />
 
         <Button
             android:id="@+id/btnExit"

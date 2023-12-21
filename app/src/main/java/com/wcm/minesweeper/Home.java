@@ -44,13 +44,13 @@ public class Home extends AppCompatActivity {
 
     private void startGame() {
         // 启动游戏界面的逻辑
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, Model.class);
         startActivity(intent);
     }
 
     private void customizeQuantity() {
-        // 启动自定义数量界面的逻辑
-        Intent intent = new Intent(this, Home.class);
+        // 查看玩法介绍
+        Intent intent = new Intent(this, Introduction.class);
         startActivity(intent);
     }
 

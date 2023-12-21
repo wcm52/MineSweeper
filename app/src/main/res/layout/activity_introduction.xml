@@ -1,0 +1,42 @@
+<!-- res/layout/activity_rules.xml -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#fbf5eb"
+    android:padding="16dp"
+    android:gravity="center_horizontal">
+    <TextView
+        android:id="@+id/model"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="16dp"
+        android:text="玩法说明"
+        android:textColor="#000000"
+        android:textSize="50sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:id="@+id/threeButton"
+        android:layout_width="300dp"
+        android:layout_height="450dp"
+        android:background="#ffedd3"
+        android:elevation="2dp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/textViewRules"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="扫雷玩法介绍：\n这里是扫雷的基本规则和玩法说明。"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"/>
+    </LinearLayout>
+
+</LinearLayout>
