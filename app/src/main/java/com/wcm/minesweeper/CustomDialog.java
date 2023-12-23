@@ -10,6 +10,9 @@ import android.widget.TextView;
 public class CustomDialog extends Dialog implements View.OnClickListener {
     private Context context;
     private DialogClickListener listener;
+    public CustomDialog(Context context){
+        super(context);
+    }
 
     public CustomDialog(Context context, DialogClickListener listener) {
         super(context);

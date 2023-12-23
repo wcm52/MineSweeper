@@ -22,8 +22,7 @@ public class Home extends AppCompatActivity {
                 startGame();
             }
         });
-
-        // 自定义数量按钮
+        // 玩法介绍按钮
         Button btnCustomize = findViewById(R.id.btnCustomize);
         btnCustomize.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,13 +46,11 @@ public class Home extends AppCompatActivity {
         Intent intent = new Intent(this, Model.class);
         startActivity(intent);
     }
-
     private void customizeQuantity() {
         // 查看玩法介绍
         Intent intent = new Intent(this, Introduction.class);
         startActivity(intent);
     }
-
     private void exitGame() {
         // 退出游戏的逻辑
         finishAffinity(); // 关闭所有相关的 Activity

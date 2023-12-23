@@ -21,11 +21,9 @@ public class GameFinish extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_finish);
-
         // 获取从游戏界面传递过来的游戏时长
         Intent intent = getIntent();
         status = intent.getBooleanExtra("game_status",false);
-//        Log.d("Status", status + " ");
         //设置游戏状态
         TextView tvGameStatus = findViewById(R.id.status_text);
         if(status){
@@ -34,12 +32,10 @@ public class GameFinish extends AppCompatActivity {
         else{
             tvGameStatus.setText("游戏失败");
         }
-
         gameDuration = intent.getLongExtra("game_duration", 0);
         // 设置游戏时长文本
         TextView tvGameDuration = findViewById(R.id.tvGameDuration);
         tvGameDuration.setText("用时：" + formatDuration(gameDuration));
-
         mineCnt = intent.getIntExtra("mines_cnt",0);
         flagCnt = intent.getIntExtra("flag_cnt",0);
         width = intent.getIntExtra("width",0);
@@ -64,8 +60,7 @@ public class GameFinish extends AppCompatActivity {
                 startGameAgain();
             }
         });
-
-        // 返回主菜单按钮
+        // 返回模式选择
         Button btnMainMenu = findViewById(R.id.btnMainMenu);
         btnMainMenu.setOnClickListener(new View.OnClickListener() {
             @Override

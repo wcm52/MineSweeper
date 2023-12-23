@@ -4,11 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#f2f2f2"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:gravity="center"
+    >
 
     <ImageView
         android:id="@+id/background1"
-        android:layout_marginTop="50dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
@@ -21,7 +22,6 @@
         android:id="@+id/threeButton"
         android:layout_width="300dp"
         android:layout_height="300dp"
-
         android:layout_below="@id/background1"
         android:layout_centerHorizontal="true"
         android:background="@drawable/background"

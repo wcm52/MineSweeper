@@ -1,85 +1,93 @@
 <!-- activity_mode_selection.xml -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#fbf5eb"
-    android:padding="16dp">
+    android:gravity="center"
+    android:padding="30dp">
 
-    <RelativeLayout
+    <TextView
+        android:id="@+id/model"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="选择难度"
+        android:textColor="#000000"
+        android:textSize="50sp"
+        android:paddingTop="10dp"
+        android:textStyle="bold" />
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-
-        android:layout_centerInParent="true"
-        android:layout_marginTop="60dp"
-        android:elevation="3dp"
-        android:padding="50dp">
-
-        <TextView
-            android:id="@+id/model"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/model"
+        android:fillViewport="true">
+        <RelativeLayout
+            android:id="@+id/layout2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="16dp"
-            android:text="选择难度"
-            android:textColor="#000000"
-            android:textSize="50sp"
-            android:textStyle="bold" />
+            android:gravity="center"
+            android:elevation="3dp"
+            android:padding="10dp"
+            android:clipChildren="false"
+            android:clipToPadding="false">
 
-        <!-- 简单 -->
-        <Button
-            android:id="@+id/btnEasy"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/model"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/border2"
-            android:onClick="onDifficultySelected"
-            android:text="初级\n10个  9* 9"
-            android:textSize="20sp" />
+            <!-- 简单 -->
+            <Button
+                android:id="@+id/btnEasy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/border2"
+                android:onClick="onDifficultySelected"
+                android:text="初级\n10个  9* 9"
+                android:textSize="20sp" />
 
-        <!-- 中等 -->
-        <Button
-            android:id="@+id/btnMedium"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/btnEasy"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/border2"
-            android:onClick="onDifficultySelected"
-            android:text="中级\n20个  12* 9"
-            android:textSize="20sp" />
+            <!-- 中等 -->
+            <Button
+                android:id="@+id/btnMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/btnEasy"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/border2"
+                android:onClick="onDifficultySelected"
+                android:text="中级\n20个  12* 9"
+                android:textSize="20sp" />
 
-        <!-- 困难 -->
-        <Button
-            android:id="@+id/btnHard"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/btnMedium"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/border2"
-            android:onClick="onDifficultySelected"
-            android:text="高级\n30个 16* 9"
-            android:textSize="20sp" />
-        <!-- 地狱 -->
-        <Button
-            android:id="@+id/btnHard2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/btnHard"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/border2"
-            android:onClick="onDifficultySelected"
-            android:text="地狱\n50个 20*13"
-            android:textSize="20sp" />
-        <Button
-            android:id="@+id/btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/btnHard2"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/border2"
-            android:text="自定义"
-            android:textSize="20sp" />
+            <!-- 困难 -->
+            <Button
+                android:id="@+id/btnHard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/btnMedium"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/border2"
+                android:onClick="onDifficultySelected"
+                android:text="高级\n30个 16* 9"
+                android:textSize="20sp" />
+            <!-- 地狱 -->
+            <Button
+                android:id="@+id/btnHard2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/btnHard"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/border2"
+                android:onClick="onDifficultySelected"
+                android:text="地狱\n50个 20*13"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/btnHard2"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/border2"
+                android:text="自定义"
+                android:textSize="20sp" />
     </RelativeLayout>
+    </ScrollView>
 
 </RelativeLayout>
